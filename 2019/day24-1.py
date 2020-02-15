@@ -2,15 +2,18 @@
 import sys
 from copy import deepcopy
 
+
 def print_grids(grids):
     for row in grids:
         for c in row:
             print(c, end='')
         print('')
 
+
 def to_string(grids):
     return ''.join([c for row in grids for c in row])
-            
+
+
 grids = []
 for line in sys.stdin:
     line = line.strip()
@@ -49,4 +52,3 @@ while True:
         break
 
     uniq_grids.add(grids_str)
-

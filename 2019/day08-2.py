@@ -10,7 +10,7 @@ for line in sys.stdin:
     start = 0
     while start + image_width < len(line):
         for height in range(image_height):
-            for width, c in enumerate(line[start:start+image_width]):
+            for width, c in enumerate(line[start:start + image_width]):
                 if c == '0':
                     # black
                     if image[width][height] == 't':

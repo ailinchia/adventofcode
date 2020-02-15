@@ -3,7 +3,10 @@ import sys
 
 
 # function to find the shortest path
-def find_shortest_path(graph, start, end, path =[]):
+def find_shortest_path(graph, start, end, path=None):
+    if path is None:
+        path = []
+
     path = path + [start]
     if start == end:
         return path
@@ -16,9 +19,10 @@ def find_shortest_path(graph, start, end, path =[]):
                     shortest = newpath
     return shortest
 
+
 orbits = {}
 for line in sys.stdin:
-    (object0, object1) = line.strip().split(')')    
+    (object0, object1) = line.strip().split(')')
     arr0 = orbits.get(object0, [])
     arr0.append(object1)
     orbits[object0] = arr0
@@ -26,7 +30,5 @@ for line in sys.stdin:
     arr1.append(object0)
     orbits[object1] = arr1
 
-
-
 shortest = find_shortest_path(orbits, 'YOU', 'SAN')
-print(len(shortest)-3)
+print(len(shortest) - 3)

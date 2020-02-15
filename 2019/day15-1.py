@@ -3,7 +3,7 @@ import sys
 
 
 def move_droid(direction):
-    if direction == 'N':    # north
+    if direction == 'N':  # north
         return 1
     elif direction == 'S':  # south
         return 2
@@ -12,13 +12,14 @@ def move_droid(direction):
     elif direction == 'E':  # east
         return 4
     else:
-        assert(False)
+        assert (False)
+
 
 def get_type(grids, direction, x, y):
     if direction == 'N':
         if y - 1 not in grids or x not in grids[y - 1]:
             return ''
-        return grids[y-1][x]
+        return grids[y - 1][x]
     elif direction == 'E':
         if x + 1 not in grids[y]:
             return ''
@@ -26,17 +27,20 @@ def get_type(grids, direction, x, y):
     elif direction == 'S':
         if y + 1 not in grids or x not in grids[y + 1]:
             return ''
-        return grids[y+1][x]
+        return grids[y + 1][x]
     elif direction == 'W':
         if x - 1 not in grids[y]:
             return ''
-        return grids[y][x-1]
+        return grids[y][x - 1]
+
 
 def has_visited(grids, direction, x, y):
     return get_type(grids, direction, x, y) == '.'
 
+
 def has_wall(grids, direction, x, y):
     return get_type(grids, direction, x, y) == '#'
+
 
 def has_walls(grids, x, y):
     output = set()
@@ -44,6 +48,7 @@ def has_walls(grids, x, y):
         if has_wall(grids, direction, x, y):
             output.add(direction)
     return output
+
 
 def get_direction(grids, wall, x, y):
     if len(grids) == 0:
@@ -117,6 +122,7 @@ def get_direction(grids, wall, x, y):
     elif wall == None:
         return get_direction(grids, 'E', x, y)
 
+
 def update_grids(grids, direction, status, x, y):
     c = ' '
     if output == 0:
@@ -128,7 +134,7 @@ def update_grids(grids, direction, status, x, y):
     elif output == 2:
         # moved one step; at location of the oxygen system
         c = 'o'
-    
+
     dx = x
     dy = y
 
@@ -140,7 +146,7 @@ def update_grids(grids, direction, status, x, y):
         x -= 1
     else:
         x += 1
-    
+
     if y not in grids:
         grids[y] = {}
 
@@ -151,6 +157,7 @@ def update_grids(grids, direction, status, x, y):
         dy = y
 
     return grids, dx, dy, c == 'o'
+
 
 def print_grids(grids, dx, dy):
     min_x = None
@@ -163,17 +170,18 @@ def print_grids(grids, dx, dy):
                 max_x = x
     for y in sorted(grids):
         y_keys = sorted(grids[y])
-        for x in range(min_x, max_x+1):
+        for x in range(min_x, max_x + 1):
             if dy == y and dx == x:
                 print('D', end='')
             elif x in y_keys:
                 print(grids[y][x], end='')
-            else: 
+            else:
                 print(' ', end='')
         print('')
 
     for k in range(len(grids)):
         print('\033[F', end='')
+
 
 def get_pos(mode, param, relative_base):
     if mode == 0:
@@ -185,19 +193,21 @@ def get_pos(mode, param, relative_base):
     else:
         pass
 
+
 def get_value(mode, param, relative_base, integers):
-    if mode == 0:   # position mode
+    if mode == 0:  # position mode
         return integers.get(get_pos(mode, param, relative_base), 0)
-    elif mode == 1: # immediate mode
+    elif mode == 1:  # immediate mode
         return param
-    elif mode == 2: # relative mode
+    elif mode == 2:  # relative mode
         return integers.get(get_pos(mode, param, relative_base), 0)
     else:
         pass
 
+
 for line in sys.stdin:
     items = line.strip().split(',')
-    integers = { i : int(items[i]) for i in range(0, len(items)) }
+    integers = {i: int(items[i]) for i in range(0, len(items))}
 
     grids = {}
     x = 0
@@ -220,17 +230,17 @@ for line in sys.stdin:
         mode1 = int((integers[i] % 1000) / 100)
         mode2 = int((integers[i] % 10000) / 1000)
         mode3 = int((integers[i] % 100000) / 10000)
-        if opcode == 1:     # adds
+        if opcode == 1:  # adds
             integers[get_pos(mode3, integers[i + 3], relative_base)] = get_value(mode1, integers[i + 1], relative_base, integers) + get_value(mode2, integers[i + 2], relative_base, integers)
             step = 4
-        elif opcode == 2:   # multiplies
+        elif opcode == 2:  # multiplies
             integers[get_pos(mode3, integers[i + 3], relative_base)] = get_value(mode1, integers[i + 1], relative_base, integers) * get_value(mode2, integers[i + 2], relative_base, integers)
             step = 4
-        elif opcode == 3:   # input
+        elif opcode == 3:  # input
             direction, wall = get_direction(grids, wall, x, y)
             integers[get_pos(mode1, integers[i + 1], relative_base)] = move_droid(direction)
             step = 2
-        elif opcode == 4:   # output
+        elif opcode == 4:  # output
             output = get_value(mode1, integers[i + 1], relative_base, integers)
             grids, x, y, found = update_grids(grids, direction, output, x, y)
             if found:
@@ -240,31 +250,31 @@ for line in sys.stdin:
             if found_tank and x == 0 and y == 0:
                 break
             step = 2
-        elif opcode == 5:   # jump-if-true
+        elif opcode == 5:  # jump-if-true
             if get_value(mode1, integers[i + 1], relative_base, integers) != 0:
                 i = get_value(mode2, integers[i + 2], relative_base, integers)
                 step = 0
             else:
                 step = 3
-        elif opcode == 6:   # jump-if-false
+        elif opcode == 6:  # jump-if-false
             if get_value(mode1, integers[i + 1], relative_base, integers) == 0:
                 i = get_value(mode2, integers[i + 2], relative_base, integers)
                 step = 0
             else:
                 step = 3
-        elif opcode == 7:   # less than
+        elif opcode == 7:  # less than
             if get_value(mode1, integers.get(i + 1, 0), relative_base, integers) < get_value(mode2, integers[i + 2], relative_base, integers):
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 1
             else:
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 0
             step = 4
-        elif opcode == 8:   # equals
+        elif opcode == 8:  # equals
             if get_value(mode1, integers.get(i + 1, 0), relative_base, integers) == get_value(mode2, integers[i + 2], relative_base, integers):
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 1
             else:
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 0
             step = 4
-        elif opcode == 9:   # relative-base
+        elif opcode == 9:  # relative-base
             relative_base += get_value(mode1, integers.get(i + 1, 0), relative_base, integers)
             step = 2
         elif opcode == 99:
@@ -292,9 +302,8 @@ for line in sys.stdin:
                         points.append((c, y, x + 1))
                 elif c == '.':
                     has_dot = True
-        
+
         for (c, y, x) in points:
             grids[y][x] = str(int(c) + 1)
 
     print(grids[oy][ox])
-    

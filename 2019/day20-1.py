@@ -40,7 +40,8 @@ def find_edges(grids, min_x, max_x, min_y, max_y, c):
 
     return (upper_y, lower_y, left_x, right_x)
 
-def find_all_paths(graph, start, end, path =[]):
+
+def find_all_paths(graph, start, end, path=[]):
     path = path + [start]
     if start == end:
         return [path]
@@ -51,6 +52,7 @@ def find_all_paths(graph, start, end, path =[]):
             for newpath in newpaths:
                 paths.append(newpath)
     return paths
+
 
 def get_paths(grids, gates0, gates1, paths, distances):
     for g0 in sorted(gates0):
@@ -78,7 +80,7 @@ def get_paths(grids, gates0, gates1, paths, distances):
                             points.append((c, y, x - 1))
                         if x + 1 < len(row) and gs[y][x + 1] == '.':
                             points.append((c, y, x + 1))
-            
+
             for (c, y, x) in points:
                 gs[y][x] = str(int(c) + 1)
 
@@ -108,6 +110,7 @@ def get_paths(grids, gates0, gates1, paths, distances):
                 distances[g0] = d
     return paths, distances
 
+
 grids = []
 for line in sys.stdin:
     grids.append([c for c in line[:-1]])
@@ -121,7 +124,6 @@ inner_upper_y -= 1
 inner_lower_y += 1
 inner_left_x -= 1
 inner_right_x += 1
-
 
 # outer gates
 outer_gates = {}
@@ -143,7 +145,6 @@ for x in range(left_x, right_x):
         outer_gates[gu] = (upper_y, x)
     if gl != '  ':
         outer_gates[gl] = (lower_y, x)
-
 
 # inner gates
 inner_gates = {}

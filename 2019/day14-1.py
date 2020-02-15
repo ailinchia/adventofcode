@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 
-
 reactions = {}
 for line in sys.stdin:
     inputs_str, output_str = line.strip().split('=>')
@@ -42,8 +41,7 @@ while len(reaction) != 1:
             extras[i] += extra_count
             for m in range(multiples):
                 output += [c for c in input_chems]
-        
-    
+
     if ore_count > 0:
         output.append((ore_count, 'ORE'))
 

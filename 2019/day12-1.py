@@ -2,6 +2,7 @@
 import sys
 from itertools import combinations
 
+
 def get_velocity(p0, p1):
     if p0 == p1:
         return 0
@@ -10,12 +11,13 @@ def get_velocity(p0, p1):
     else:
         return 1
 
+
 class Point3D:
     def __init__(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
-    
+
     def __repr__(self):
         return 'Point3D(' + str(self.x) + ', ' + str(self.y) + ', ' + str(self.z) + ')'
 
@@ -37,6 +39,7 @@ class Point3D:
     def get_velocity(self, other):
         return Point3D(get_velocity(self.x, other.x), get_velocity(self.y, other.y), get_velocity(self.z, other.z))
 
+
 points = {}
 for line in sys.stdin:
     xs, ys, zs = line.strip()[1:-1].split(',')
@@ -45,10 +48,10 @@ for line in sys.stdin:
     points[key] = point
 
 pairs = list(combinations(points.keys(), 2))
-velocities = {} 
+velocities = {}
 for ts in range(0, 1000):
     # calculate velocity
-    for i,(k0, k1) in enumerate(pairs):
+    for i, (k0, k1) in enumerate(pairs):
         m0 = points[k0]
         m1 = points[k1]
 

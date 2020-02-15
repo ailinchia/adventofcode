@@ -14,12 +14,13 @@ def get_pos(mode, param, relative_base):
     else:
         pass
 
+
 def get_value(mode, param, relative_base, integers):
-    if mode == 0:   # position mode
+    if mode == 0:  # position mode
         return integers.get(get_pos(mode, param, relative_base), 0)
-    elif mode == 1: # immediate mode
+    elif mode == 1:  # immediate mode
         return param
-    elif mode == 2: # relative mode
+    elif mode == 2:  # relative mode
         return integers.get(get_pos(mode, param, relative_base), 0)
     else:
         pass
@@ -44,16 +45,16 @@ def robots(integers, inputs):
         mode1 = int((integers[i] % 1000) / 100)
         mode2 = int((integers[i] % 10000) / 1000)
         mode3 = int((integers[i] % 100000) / 10000)
-        if opcode == 1:     # adds
+        if opcode == 1:  # adds
             integers[get_pos(mode3, integers[i + 3], relative_base)] = get_value(mode1, integers[i + 1], relative_base, integers) + get_value(mode2, integers[i + 2], relative_base, integers)
             step = 4
-        elif opcode == 2:   # multiplies
+        elif opcode == 2:  # multiplies
             integers[get_pos(mode3, integers[i + 3], relative_base)] = get_value(mode1, integers[i + 1], relative_base, integers) * get_value(mode2, integers[i + 2], relative_base, integers)
             step = 4
-        elif opcode == 3:   # input
+        elif opcode == 3:  # input
             integers[get_pos(mode1, integers[i + 1], relative_base)] = inputs.pop(0)
             step = 2
-        elif opcode == 4:   # output
+        elif opcode == 4:  # output
             output = get_value(mode1, integers[i + 1], relative_base, integers)
             if output < 0xff:
                 c = chr(output)
@@ -66,35 +67,35 @@ def robots(integers, inputs):
                         rx = x
                         ry = y
                     grids[y].append(c)
-                    x +=1
+                    x += 1
             else:
                 print(output)
             step = 2
-        elif opcode == 5:   # jump-if-true
+        elif opcode == 5:  # jump-if-true
             if get_value(mode1, integers[i + 1], relative_base, integers) != 0:
                 i = get_value(mode2, integers[i + 2], relative_base, integers)
                 step = 0
             else:
                 step = 3
-        elif opcode == 6:   # jump-if-false
+        elif opcode == 6:  # jump-if-false
             if get_value(mode1, integers[i + 1], relative_base, integers) == 0:
                 i = get_value(mode2, integers[i + 2], relative_base, integers)
                 step = 0
             else:
                 step = 3
-        elif opcode == 7:   # less than
+        elif opcode == 7:  # less than
             if get_value(mode1, integers.get(i + 1, 0), relative_base, integers) < get_value(mode2, integers[i + 2], relative_base, integers):
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 1
             else:
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 0
             step = 4
-        elif opcode == 8:   # equals
+        elif opcode == 8:  # equals
             if get_value(mode1, integers.get(i + 1, 0), relative_base, integers) == get_value(mode2, integers[i + 2], relative_base, integers):
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 1
             else:
                 integers[get_pos(mode3, integers[i + 3], relative_base)] = 0
             step = 4
-        elif opcode == 9:   # relative-base
+        elif opcode == 9:  # relative-base
             relative_base += get_value(mode1, integers.get(i + 1, 0), relative_base, integers)
             step = 2
         elif opcode == 99:
@@ -104,9 +105,10 @@ def robots(integers, inputs):
 
     return grids, rx, ry
 
+
 for line in sys.stdin:
     items = line.strip().split(',')
-    integers = { i : int(items[i]) for i in range(0, len(items)) }
+    integers = {i: int(items[i]) for i in range(0, len(items))}
 
     integers[0] = 1
     grids, rx, ry = robots(deepcopy(integers), [])
@@ -126,18 +128,18 @@ for line in sys.stdin:
     while not done:
         changed = True
         if facing == 'U':
-            if y - 1 >= 0 and grids[y-1][x] == '#':
+            if y - 1 >= 0 and grids[y - 1][x] == '#':
                 # up
                 changed = False
                 count += 1
                 y -= 1
                 facing = 'U'
-            elif x + 1 < len(grids[y]) and grids[y][x+1] == '#':
+            elif x + 1 < len(grids[y]) and grids[y][x + 1] == '#':
                 # right
                 direction = 'R'
                 x += 1
                 facing = 'R'
-            elif x - 1 >= 0 and grids[y][x-1] == '#':
+            elif x - 1 >= 0 and grids[y][x - 1] == '#':
                 # left
                 direction = 'L'
                 x -= 1
@@ -145,18 +147,18 @@ for line in sys.stdin:
             else:
                 done = True
         elif facing == 'R':
-            if x + 1 < len(grids[y]) and grids[y][x+1] == '#':
+            if x + 1 < len(grids[y]) and grids[y][x + 1] == '#':
                 # right
                 changed = False
                 count += 1
                 x += 1
                 facing = 'R'
-            elif y + 1 < len(grids) and grids[y+1][x] == '#':
+            elif y + 1 < len(grids) and grids[y + 1][x] == '#':
                 # down
                 direction = 'R'
                 y += 1
                 facing = 'D'
-            elif y - 1 >= 0 and grids[y-1][x] == '#':
+            elif y - 1 >= 0 and grids[y - 1][x] == '#':
                 # up
                 direction = 'L'
                 y -= 1
@@ -164,18 +166,18 @@ for line in sys.stdin:
             else:
                 done = True
         elif facing == 'D':
-            if y + 1 < len(grids) and grids[y+1][x] == '#':
+            if y + 1 < len(grids) and grids[y + 1][x] == '#':
                 # down
                 changed = False
                 count += 1
                 y += 1
                 facing = 'D'
-            elif x + 1 < len(grids[y]) and grids[y][x+1] == '#':
+            elif x + 1 < len(grids[y]) and grids[y][x + 1] == '#':
                 # right
                 direction = 'L'
                 x += 1
                 facing = 'R'
-            elif x - 1 >= 0 and grids[y][x-1] == '#':
+            elif x - 1 >= 0 and grids[y][x - 1] == '#':
                 # left
                 direction = 'R'
                 x -= 1
@@ -183,18 +185,18 @@ for line in sys.stdin:
             else:
                 done = True
         elif facing == 'L':
-            if x - 1 >= 0 and grids[y][x-1] == '#':
+            if x - 1 >= 0 and grids[y][x - 1] == '#':
                 # left
                 changed = False
                 count += 1
                 x -= 1
                 facing = 'L'
-            elif y + 1 < len(grids) and grids[y+1][x] == '#':
+            elif y + 1 < len(grids) and grids[y + 1][x] == '#':
                 # down
                 direction = 'L'
                 y += 1
                 facing = 'D'
-            elif y - 1 >= 0 and grids[y-1][x] == '#':
+            elif y - 1 >= 0 and grids[y - 1][x] == '#':
                 # up
                 direction = 'R'
                 y -= 1
@@ -216,7 +218,7 @@ for line in sys.stdin:
     for length in range(22, 6, -1):
         i = 0
         while i + length <= len(path):
-            ss = path[i:i+length]
+            ss = path[i:i + length]
             if (i == 0 or path[i - 1] == ',') and '0' <= ss[-1:] <= '9' and (ss[0] == 'L' or ss[0] == 'R'):
                 possibles.append(ss)
             i += 1
@@ -239,7 +241,7 @@ for line in sys.stdin:
             if len(output) <= 30:
                 pos_l = output.find('L')
                 pos_r = output.find('R')
-                if pos_l >=0 or pos_r >=0:    
+                if pos_l >= 0 or pos_r >= 0:
                     if pos_l >= 0 and pos_r >= 0:
                         pos = min(pos_l, pos_r)
                     elif pos_l >= 0:

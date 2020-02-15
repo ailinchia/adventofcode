@@ -2,7 +2,7 @@
 import sys
 
 card_count = 10007
-#card_count = 10
+# card_count = 10
 cards = [i for i in range(card_count)]
 for line in sys.stdin:
     line = line.strip()

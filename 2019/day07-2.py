@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import sys
-from itertools import permutations 
+from itertools import permutations
+
 
 def get_value(mode, param, integers):
     if mode == 0:
         return int(integers[int(param)])
     else:
         return int(param)
+
 
 def amplifier(integers, pos, input0, input1):
     input_signal = input0
@@ -20,41 +22,41 @@ def amplifier(integers, pos, input0, input1):
         opcode = int(integers[i][-2:])
         mode1 = int(integers[i][-3:-2]) if integers[i][-3:-2] else 0
         mode2 = int(integers[i][-4:-3]) if integers[i][-4:-3] else 0
-        if opcode == 1:     # adds
+        if opcode == 1:  # adds
             integers[int(integers[i + 3])] = str(get_value(mode1, integers[i + 1], integers) + get_value(mode2, integers[i + 2], integers))
             step = 4
-        elif opcode == 2:   # multiplies
+        elif opcode == 2:  # multiplies
             integers[int(integers[i + 3])] = str(get_value(mode1, integers[i + 1], integers) * get_value(mode2, integers[i + 2], integers))
             step = 4
-        elif opcode == 3:   # input
-            assert(input_signal != None)
+        elif opcode == 3:  # input
+            assert (input_signal != None)
             integers[int(integers[i + 1])] = input_signal
             input_signal = input1
             step = 2
-        elif opcode == 4:   # output
+        elif opcode == 4:  # output
             output_signal = get_value(mode1, integers[i + 1], integers)
             step = 2
             i += step
             break
-        elif opcode == 5:   # jump-if-true
+        elif opcode == 5:  # jump-if-true
             if get_value(mode1, integers[i + 1], integers) != 0:
                 i = get_value(mode2, integers[i + 2], integers)
                 step = 0
             else:
                 step = 3
-        elif opcode == 6:   # jump-if-false
+        elif opcode == 6:  # jump-if-false
             if get_value(mode1, integers[i + 1], integers) == 0:
                 i = get_value(mode2, integers[i + 2], integers)
                 step = 0
             else:
                 step = 3
-        elif opcode == 7:   # less than
+        elif opcode == 7:  # less than
             if get_value(mode1, integers[i + 1], integers) < get_value(mode2, integers[i + 2], integers):
                 integers[int(integers[i + 3])] = "1"
             else:
                 integers[int(integers[i + 3])] = "0"
             step = 4
-        elif opcode == 8:   # equals
+        elif opcode == 8:  # equals
             if get_value(mode1, integers[i + 1], integers) == get_value(mode2, integers[i + 2], integers):
                 integers[int(integers[i + 3])] = "1"
             else:
@@ -66,6 +68,7 @@ def amplifier(integers, pos, input0, input1):
 
         i += step
     return done, integers, i, output_signal
+
 
 for line in sys.stdin:
     max_output_signal = 0
@@ -97,6 +100,5 @@ for line in sys.stdin:
             done, amp_e, amp_e_pos, output_e = amplifier(amp_e, amp_e_pos, output_d, None)
             if output_e is not None and max_output_signal < output_e:
                 max_output_signal = output_e
-
 
 print(max_output_signal)

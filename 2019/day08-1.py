@@ -15,7 +15,7 @@ for line in sys.stdin:
         c1 = 0
         c2 = 0
         for height in range(image_height):
-            for c in line[start:start+image_width]:
+            for c in line[start:start + image_width]:
                 if c == '0':
                     c0 += 1
                 elif c == '1':
