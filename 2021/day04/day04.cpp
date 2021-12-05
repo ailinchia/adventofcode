@@ -120,7 +120,7 @@ int main() {
     }
     std::vector<uint> draws;
     auto drawStrs = split(line, ',');
-    std::transform(drawStrs.begin(), drawStrs.end(), std::back_inserter(draws), [](std::string s) -> uint { return std::stoi(s, nullptr, 10 );});
+    std::transform(drawStrs.begin(), drawStrs.end(), std::back_inserter(draws), [](std::string s) -> uint { return std::stoi(s);});
 
     // get boards
     std::vector<bingoBoard> boards;
