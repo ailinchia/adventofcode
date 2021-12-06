@@ -4,6 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include <map>
+#include <numeric>
 
 std::vector<std::string> split(const std::string &str, char delimiter) {
     std::vector<std::string> elements;
@@ -34,11 +35,7 @@ uint64_t countFish(std::map<uint, uint64_t> inputMap, uint numDays) {
         inputMap = newInputMap;
     }
 
-    uint64_t count = 0;
-    for (auto im : inputMap) {
-        count += im.second;
-    }
-    return count;
+    return std::accumulate(inputMap.begin(), inputMap.end(), 0ULL, [](uint64_t value, const std::map<uint, uint64_t>::value_type &p) { return value + p.second; });
 }
 
 void part1(std::map<uint, uint64_t> inputMap, uint numDays) {
