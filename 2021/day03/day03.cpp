@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <list>
+#include <algorithm>
 
 void part1(const std::vector<std::string> &input) {
     auto numLen = input[0].length();
@@ -9,16 +9,11 @@ void part1(const std::vector<std::string> &input) {
     uint gamma = 0;
     uint epsilon = 0;
     for (auto i = 0; i < numLen; ++i) {
-        uint countOne = 0;
-        for (auto num : input) {
-            if (num[i] == '1') {
-                ++countOne;
-            }
-        }
+        uint countOne = std::count_if(input.begin(), input.end(), [i](std::string s) { return s[i] == '1'; });
 
         gamma <<= 1;
         epsilon <<= 1;
-        if (countOne > (input.size() / 2)) {
+        if (countOne * 2 >= input.size()) {
             gamma += 1;
         } else {
             epsilon += 1;
@@ -32,73 +27,23 @@ void part2(const std::vector<std::string> &input) {
     auto numLen = input[0].length();
 
     // oxygen generator rating
-    auto ogrInput = std::list<std::string>(input.begin(), input.end());
-    for (auto i = 0; i < numLen; ++i) {
-        uint countZero = 0;
-        uint countOne = 0;
-        for (auto num : ogrInput) {
-            if (num[i] == '0') {
-                ++countZero;
-            } else {
-                ++countOne;
-            }
-        }
-
-        auto keepBit = '0';
-        if (countOne >= countZero) {
-            keepBit = '1';
-        }
-
-        if (ogrInput.size() > 1) {
-            auto it = ogrInput.begin();
-            while (it != ogrInput.end()) {
-                if (it->c_str()[i] == keepBit) {
-                    ++it;
-                } else {
-                    it = ogrInput.erase(it);
-                }
-            }
-        }
-
-        if (ogrInput.size() == 1) {
-            break;
-        }
+    auto ogrInput = std::vector<std::string>(input.begin(), input.end());
+    for (auto i = 0; i < numLen && ogrInput.size() > 1; ++i) {
+        uint countOne = std::count_if(ogrInput.begin(), ogrInput.end(), [i](const std::string &s) { return s[i] == '1'; });
+        char keepBit = (countOne * 2 >= ogrInput.size()) ? '1' : '0';
+        std::erase_if(ogrInput, [keepBit, i](const std::string &s) { return s[i] != keepBit; });
     }
+    auto ogr = std::stoi(*ogrInput.begin(), nullptr, 2);
 
     // CO2 scrubber rating
-    auto csrInput = std::list<std::string>(input.begin(), input.end());
-    for (auto i = 0; i < numLen; ++i) {
-        uint countZero = 0;
-        uint countOne = 0;
-        for (auto num : csrInput) {
-            if (num[i] == '0') {
-                ++countZero;
-            } else {
-                ++countOne;
-            }
-        }
-
-        auto keepBit = '1';
-        if (countZero <= countOne) {
-            keepBit = '0';
-        }
-
-        auto it = csrInput.begin();
-        while (it != csrInput.end()) {
-            if (it->c_str()[i] == keepBit) {
-                ++it;
-            } else {
-                it = csrInput.erase(it);
-            }
-        }
-
-        if (csrInput.size() == 1) {
-            break;
-        }
+    auto csrInput = std::vector<std::string>(input.begin(), input.end());
+    for (auto i = 0; i < numLen && csrInput.size() > 1; ++i) {
+        uint countZero = std::count_if(csrInput.begin(), csrInput.end(), [i](std::string s) { return s[i] == '0'; });
+        char keepBit = (countZero * 2 <= csrInput.size()) ? '0' : '1';
+        std::erase_if(csrInput, [keepBit, i](const std::string &s) { return s[i] != keepBit; });
     }
+    auto csr = std::stoi(*csrInput.begin(), nullptr, 2);
 
-    auto ogr = std::stoi(ogrInput.begin()->c_str(), nullptr, 2);
-    auto csr = std::stoi(csrInput.begin()->c_str(), nullptr, 2);
     std::cout << ogr * csr << std::endl;
 }
 
