@@ -21,7 +21,7 @@ void part1(const std::vector<uint> &inputs) {
 
     for (auto i = *min; i <= *max; i++) {
         int totalFuel = 0;
-        for ( auto input : inputs) {
+        for (auto input : inputs) {
             totalFuel += (std::max(input, i) - std::min(input, i));
         }
         if (totalFuel < minTotalFuel) {
@@ -39,11 +39,10 @@ void part2(const std::vector<uint> &inputs) {
 
     for (auto i = *min; i <= *max; i++) {
         int totalFuel = 0;
-        for ( auto input : inputs) {
+        for (auto input : inputs) {
             auto steps = std::max(input, i) - std::min(input, i);
-            for (auto j = 1; j <= steps; j++) {
-                totalFuel += j;
-            }
+            // triangular number
+            totalFuel += ((steps + 1) * steps) / 2;
         }
         if (totalFuel < minTotalFuel) {
             minTotalFuel = totalFuel;
