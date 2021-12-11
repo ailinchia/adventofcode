@@ -1,7 +1,6 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <map>
 #include <algorithm>
 
 bool isOpen(char c) {
